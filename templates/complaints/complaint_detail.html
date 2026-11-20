@@ -1,0 +1,292 @@
+<!-- templates/complaints/complaint_detail.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+{% block title %}Complaint Details - {{ complaint.tracking_id }}{% endblock %}
+{% block breadcrumb %}Complaint Details{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6 fade-in">
+    
+    <!-- Back Button & Header with Actions -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2 text-sm font-medium text-[#475467] hover:text-[#10B981] transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Dashboard
+            </a>
+            <span class="hidden md:inline text-[#E5E7EB]">|</span>
+            <span class="text-xs font-medium text-[#475467]">Submitted on {{ complaint.created_at|date:"F j, Y, g:i a" }}</span>
+        </div>
+
+        <!-- Edit & Cancel Buttons (Only visible to owner if status allows) -->
+        {% if request.user == complaint.complainant %}
+            {% if complaint.status == 'SUBMITTED' or complaint.status == 'UNDER_REVIEW' %}
+            <div class="flex items-center gap-3">
+                <a href="{% url 'complaints:edit' complaint.id %}" class="px-4 py-2 bg-white border border-[#E5E7EB] text-[#101828] text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm">
+                    <i data-lucide="edit-3" class="w-4 h-4"></i> Edit
+                </a>
+                
+                <form action="{% url 'complaints:cancel' complaint.id %}" method="post" onsubmit="return confirm('Are you sure you want to cancel this complaint? This action cannot be undone.');">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 bg-red-50 border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-100 transition-colors flex items-center gap-2 shadow-sm">
+                        <i data-lucide="x-circle" class="w-4 h-4"></i> Cancel
+                    </button>
+                </form>
+                <!-- Download PDF Button -->
+            <a href="{% url 'complaints:download_pdf' complaint.id %}" class="px-4 py-2 bg-white border border-[#E5E7EB] text-[#101828] text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm">
+             <i data-lucide="download" class="w-4 h-4"></i> Download PDF
+            </a>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Column: Main Content -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Complaint Card -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wide
+                        {% if complaint.status == 'SUBMITTED' or complaint.status == 'UNDER_REVIEW' %} bg-amber-100 text-amber-700
+                        {% elif complaint.status == 'ASSIGNED' or complaint.status == 'INVESTIGATING' %} bg-blue-100 text-blue-700
+                        {% elif complaint.status == 'RESOLVED' or complaint.status == 'CLOSED' %} bg-emerald-100 text-emerald-700
+                        {% else %} bg-slate-100 text-slate-700 {% endif %}">
+                        {{ complaint.get_status_display }}
+                    </span>
+                    <span class="text-sm font-mono font-semibold text-[#10B981] bg-emerald-50 px-2 py-1 rounded border border-emerald-100">
+                        {{ complaint.tracking_id }}
+                    </span>
+                </div>
+                
+                <h1 class="text-2xl md:text-3xl font-bold text-[#101828] mb-4">{{ complaint.title }}</h1>
+                
+                <div class="prose max-w-none text-[#475467] text-sm leading-relaxed whitespace-pre-wrap">
+                    {{ complaint.description }}
+                </div>
+            </div>
+
+            <!-- Activity Timeline -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-6 md:p-8">
+                <h2 class="text-lg font-bold text-[#101828] mb-6 flex items-center gap-2">
+                    <i data-lucide="activity" class="w-5 h-5 text-[#10B981]"></i> Activity Timeline
+                </h2>
+                
+                <div class="relative border-l-2 border-[#E5E7EB] ml-3 space-y-8 pb-4">
+                    {% for log in logs %}
+                    <div class="relative pl-6">
+                        <!-- Timeline Dot -->
+                        <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-white 
+                            {% if log.action_type == 'CREATION' %} bg-blue-500
+                            {% elif log.action_type == 'STATUS_CHANGE' %} bg-amber-500
+                            {% elif log.action_type == 'NOTE' %} bg-slate-400
+                            {% elif log.action_type == 'UPDATE' %} bg-purple-500
+                            {% else %} bg-[#10B981] {% endif %}">
+                        </div>
+                        
+                        <!-- Log Content -->
+                        <div class="bg-[#F8FAFC] rounded-xl p-4 border border-[#E5E7EB] hover:shadow-sm transition-shadow">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <p class="text-sm font-semibold text-[#101828]">
+                                        {{ log.get_action_type_display }}
+                                    </p>
+                                    <p class="text-xs text-[#475467]">
+                                        by <span class="font-medium">{{ log.actor_display_name }}</span> (@{{ log.actor_username }})
+                                    </p>
+                                </div>
+                                <span class="text-xs text-[#98A2B3]">{{ log.created_at|date:"M d, g:i a" }}</span>
+                            </div>
+                            
+                            {% if log.previous_status and log.new_status %}
+                            <p class="text-xs text-[#475467] mb-2">
+                                Status changed from <span class="font-medium">{{ log.previous_status }}</span> to <span class="font-medium text-[#10B981]">{{ log.new_status }}</span>.
+                            </p>
+                            {% endif %}
+                            
+                            {% if log.note %}
+                            <div class="mt-3 p-3 rounded-lg text-sm 
+                                {% if log.is_internal %} bg-amber-50 text-amber-800 border border-amber-100
+                                {% else %} bg-white text-[#475467] border border-[#E5E7EB] {% endif %}">
+                                {% if log.is_internal %}
+                                <div class="flex items-center gap-1 text-xs font-bold text-amber-600 mb-1">
+                                    <i data-lucide="lock" class="w-3 h-3"></i> Internal Note
+                                </div>
+                                {% endif %}
+                                {{ log.note }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Add Note Form (Admin & Assigned Investigator) -->
+                    {% if request.user.role == 'ADMIN' or request.user == complaint.assigned_investigator %}
+                    <div class="relative pl-6 mt-8">
+                        <div class="absolute -left-[9px] top-2 w-4 h-4 rounded-full border-2 border-white bg-[#101828]"></div>
+                        <div class="bg-white rounded-xl p-4 border border-[#E5E7EB] shadow-sm">
+                            <h4 class="text-sm font-semibold text-[#101828] mb-3">Add a Note</h4>
+                            <form action="{% url 'complaints:add_note' complaint.id %}" method="post">
+                                {% csrf_token %}
+                                <textarea name="note" rows="2" required placeholder="Type your note here..." class="w-full px-4 py-3 rounded-lg border border-[#E5E7EB] focus:ring-2 focus:ring-[#10B981] outline-none text-sm resize-none mb-3"></textarea>
+                                <div class="flex items-center justify-between">
+                                    <label class="flex items-center gap-2 text-xs font-medium text-[#475467] cursor-pointer">
+                                        <input type="checkbox" name="is_internal" checked class="w-4 h-4 text-[#10B981] rounded border-gray-300 focus:ring-[#10B981]">
+                                        Internal Note (Hidden from complainant)
+                                    </label>
+                                    <button type="submit" class="px-4 py-2 bg-[#10B981] text-white rounded-lg text-xs font-semibold hover:bg-emerald-600 transition-colors">
+                                        Post Note
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Metadata Sidebar -->
+        <div class="lg:col-span-1 space-y-6">
+            
+            <!-- Case Details -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-6">
+                <h3 class="text-sm font-bold text-[#101828] uppercase tracking-wider mb-4 border-b border-[#E5E7EB] pb-2">Case Details</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-[#475467] mb-1">Category</p>
+                        <p class="text-sm font-medium text-[#101828]">{{ complaint.get_category_display }}</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-xs text-[#475467] mb-1">Priority</p>
+                        <div class="flex items-center gap-2">
+                            {% if complaint.priority == 'URGENT' %}<i data-lucide="alert-circle" class="w-4 h-4 text-red-500"></i>
+                            {% elif complaint.priority == 'HIGH' %}<i data-lucide="arrow-up-circle" class="w-4 h-4 text-orange-500"></i>
+                            {% elif complaint.priority == 'LOW' %}<i data-lucide="arrow-down-circle" class="w-4 h-4 text-slate-400"></i>
+                            {% else %}<i data-lucide="minus-circle" class="w-4 h-4 text-blue-500"></i>{% endif %}
+                            <p class="text-sm font-medium text-[#101828]">{{ complaint.get_priority_display }}</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-[#475467] mb-1">Last Updated</p>
+                        <p class="text-sm font-medium text-[#101828]">{{ complaint.updated_at|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assigned Investigator -->
+            {% if complaint.assigned_investigator %}
+            <div class="bg-[#101828] rounded-2xl shadow-sm p-6 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-bl-full pointer-events-none"></div>
+                <h3 class="text-sm font-bold uppercase tracking-wider mb-4 border-b border-white/10 pb-2">Assigned Investigator</h3>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-bold uppercase shrink-0">
+                        {{ complaint.assigned_investigator.username|make_list|first }}
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">{{ complaint.assigned_investigator.get_full_name|default:complaint.assigned_investigator.username }}</p>
+                        <p class="text-xs text-slate-400">Official Investigator</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Evidence Section -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-6">
+                <h3 class="text-sm font-bold text-[#101828] uppercase tracking-wider mb-4 border-b border-[#E5E7EB] pb-2 flex items-center gap-2">
+                    <i data-lucide="paperclip" class="w-4 h-4 text-[#10B981]"></i> Evidence & Attachments
+                </h3>
+                
+                <!-- List of Evidence -->
+                <div class="space-y-3 mb-6">
+                    {% for evidence in complaint.evidences.all %}
+                    <div class="flex items-center justify-between p-3 bg-[#F8FAFC] border border-[#E5E7EB] rounded-xl hover:shadow-sm transition-shadow">
+                        <div class="flex items-center gap-3 min-w-0">
+                            {% if '.pdf' in evidence.file.name %}
+                                <i data-lucide="file-text" class="w-6 h-6 text-red-500 shrink-0"></i>
+                            {% else %}
+                                <i data-lucide="image" class="w-6 h-6 text-blue-500 shrink-0"></i>
+                            {% endif %}
+                            <div class="min-w-0">
+                                <p class="text-xs font-medium text-[#101828] truncate" title="{{ evidence.file.name }}">Evidence File</p>
+                                <p class="text-[10px] text-[#475467]">{{ evidence.uploaded_at|date:"M d, Y" }}</p>
+                            </div>
+                        </div>
+                        <a href="{% url 'complaints:download_evidence' evidence.id %}" class="p-2 text-[#475467] hover:text-[#10B981] hover:bg-emerald-50 rounded-lg transition-colors" title="Download">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                    {% empty %}
+                    <p class="text-xs text-[#475467] text-center py-2">No evidence uploaded yet.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Upload Form -->
+               {% if request.user == complaint.complainant or request.user == complaint.assigned_investigator %}
+                <form action="{% url 'complaints:upload_evidence' complaint.id %}" method="post" enctype="multipart/form-data" class="border-t border-[#E5E7EB] pt-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="block text-xs font-semibold text-[#101828] mb-2">Upload New File (Max 10MB)</label>
+                        <input type="file" name="file" required class="block w-full text-xs text-[#475467] file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#10B981] file:text-white hover:file:bg-emerald-600 transition-all cursor-pointer">
+                    </div>
+                    <button type="submit" class="w-full bg-[#101828] text-white py-2 rounded-lg text-xs font-semibold hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Evidence
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
+            <!-- Admin: Assign Investigator Form -->
+            {% if request.user.role == 'ADMIN' %}
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-6">
+                <h3 class="text-sm font-bold text-[#101828] uppercase tracking-wider mb-4 border-b border-[#E5E7EB] pb-2 flex items-center gap-2">
+                    <i data-lucide="user-plus" class="w-4 h-4 text-[#10B981]"></i> Admin Assignment
+                </h3>
+                <form action="{% url 'complaints:assign' complaint.id %}" method="post" class="space-y-3">
+                    {% csrf_token %}
+                    <select name="investigator" required class="w-full px-4 py-2.5 rounded-xl border border-[#E5E7EB] focus:ring-2 focus:ring-[#10B981] outline-none text-sm bg-white">
+                        <option value="" disabled {% if not complaint.assigned_investigator %}selected{% endif %}>Select Investigator...</option>
+                        {% for inv in form_investigators %}
+                            <option value="{{ inv.id }}" {% if complaint.assigned_investigator.id == inv.id %}selected{% endif %}>
+                                {{ inv.get_full_name|default:inv.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="w-full bg-[#101828] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors">
+                        Assign Case
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+
+            <!-- Status Update Form (Admin & Assigned Investigator) -->
+            {% if request.user.role == 'ADMIN' or request.user == complaint.assigned_investigator %}
+                {% if complaint.status != 'CLOSED' and complaint.status != 'REJECTED' %}
+                <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-6">
+                    <h3 class="text-sm font-bold text-[#101828] uppercase tracking-wider mb-4 border-b border-[#E5E7EB] pb-2 flex items-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-4 h-4 text-[#10B981]"></i> Update Status
+                    </h3>
+                    <form action="{% url 'complaints:update_status' complaint.id %}" method="post" class="space-y-3">
+                        {% csrf_token %}
+                        <select name="new_status" required class="w-full px-4 py-2.5 rounded-xl border border-[#E5E7EB] focus:ring-2 focus:ring-[#10B981] outline-none text-sm bg-white">
+                            <option value="" disabled selected>Select new status...</option>
+                            {% for status_val, status_label in allowed_status_choices %}
+                                <option value="{{ status_val }}">{{ status_label }}</option>
+                            {% endfor %}
+                        </select>
+                        <textarea name="note" rows="2" placeholder="Optional note (visible to complainant)..." class="w-full px-4 py-2.5 rounded-xl border border-[#E5E7EB] focus:ring-2 focus:ring-[#10B981] outline-none text-sm resize-none"></textarea>
+                        <button type="submit" class="w-full bg-[#10B981] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-emerald-600 transition-colors">
+                            Update Status
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

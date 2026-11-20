@@ -1,0 +1,96 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block title %}{{ action }} Investigator{% endblock %}
+{% block breadcrumb %}{{ action }} Investigator{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto fade-in">
+    <div class="mb-8">
+        <a href="{% url 'accounts:investigator_list' %}" class="text-sm font-medium text-[#475467] hover:text-[#10B981] flex items-center gap-1 mb-4">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Investigators
+        </a>
+        <h1 class="text-2xl font-bold text-[#101828]">{{ action }} Investigator</h1>
+        <p class="text-[#475467] text-sm mt-1">Fill in the details below to {{ action|lower }} an investigator account.</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="bg-white p-6 md:p-8 rounded-2xl border border-[#E5E7EB] shadow-sm space-y-6">
+        {% csrf_token %}
+        
+        <!-- Account Info -->
+        <div class="space-y-4">
+            <h3 class="text-lg font-bold text-[#101828] border-b border-[#E5E7EB] pb-2">Account Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#101828] mb-1">First Name</label>
+                    {{ form.first_name }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#101828] mb-1">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#101828] mb-1">Username</label>
+                    {% if action == 'Edit' %}
+                        <input type="text" value="{{ form.instance.username }}" disabled class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-slate-50 text-slate-500 text-sm cursor-not-allowed">
+                    {% else %}
+                        {{ form.username }}
+                    {% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#101828] mb-1">Email Address</label>
+                    {{ form.email }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Info -->
+        <div class="space-y-4 pt-4">
+            <h3 class="text-lg font-bold text-[#101828] border-b border-[#E5E7EB] pb-2">Profile Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#101828] mb-1">Specialization</label>
+                    {{ form.specialization }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#101828] mb-1">Phone Number (Optional)</label>
+                    {{ form.phone_number }}
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#101828] mb-1">Short Bio (Optional)</label>
+                {{ form.bio }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#101828] mb-1">Profile Picture (Optional)</label>
+                {{ form.profile_picture }}
+            </div>
+        </div>
+
+        <!-- Passwords (Only for Create) -->
+        {% if action == 'Create' %}
+        <div class="space-y-4 pt-4 border-t border-[#E5E7EB]">
+            <h3 class="text-lg font-bold text-[#101828] border-b border-[#E5E7EB] pb-2 text-amber-600">Temporary Password</h3>
+            <p class="text-xs text-[#475467]">The investigator will be required to change this password on their first login.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#101828] mb-1">Password</label>
+                    {{ form.password1 }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#101828] mb-1">Confirm Password</label>
+                    {{ form.password2 }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="flex justify-end gap-4 pt-6">
+            <a href="{% url 'accounts:investigator_list' %}" class="px-6 py-3 rounded-xl border border-[#E5E7EB] text-[#475467] font-semibold text-sm hover:bg-slate-50 transition-colors">Cancel</a>
+            <button type="submit" class="bg-[#10B981] hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-semibold text-sm transition-all shadow-md hover:shadow-lg">
+                {{ action }} Investigator
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

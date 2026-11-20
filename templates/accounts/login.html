@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-[#E5E7EB] p-8 fade-in">
+    <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-[#101828]">Welcome Back</h1>
+        <p class="text-[#475467] text-sm mt-2">Log in to your Proofly account.</p>
+    </div>
+
+    <form method="post" class="space-y-5" id="loginForm">
+        {% csrf_token %}
+        
+        <div>
+            <label class="block text-sm font-medium text-[#101828] mb-1">Username or Email</label>
+            {{ form.username }}
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-[#101828] mb-1">Password</label>
+            <div class="relative">
+                {{ form.password }}
+                <button type="button" class="absolute right-3 top-3 text-[#475467] hover:text-[#101828]" onclick="togglePassword('id_password', this)">
+                    <i data-lucide="eye" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full bg-[#10B981] text-white py-3 rounded-lg font-semibold hover:bg-emerald-600 transition-all shadow-md hover:shadow-lg">
+            <span id="btnText">Sign In</span>
+        </button>
+    </form>
+
+    <p class="text-center text-sm text-[#475467] mt-6">
+        Don't have an account? <a href="{% url 'accounts:register' %}" class="text-[#10B981] font-medium hover:underline">Register here</a>
+    </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = '<i data-lucide="eye-off" class="w-5 h-5"></i>';
+        } else {
+            input.type = 'password';
+            btn.innerHTML = '<i data-lucide="eye" class="w-5 h-5"></i>';
+        }
+        lucide.createIcons();
+    }
+
+    // Loading state on submit
+    document.getElementById('loginForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        const text = document.getElementById('btnText');
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+        text.innerHTML = '<i data-lucide="loader" class="w-5 h-5 animate-spin inline mr-2"></i> Logging in...';
+        lucide.createIcons();
+    });
+</script>
+{% endblock %}

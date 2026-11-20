@@ -1,0 +1,452 @@
+<!-- templates/public/home.html -->
+{% extends 'public/base_public.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-[#F8FAFC]">
+    <!-- Background Decorative Elements -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-emerald-50 rounded-full blur-3xl opacity-60 -z-10 pointer-events-none"></div>
+    <div class="absolute top-40 left-10 w-72 h-72 bg-blue-50 rounded-full blur-3xl opacity-50 -z-10 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <!-- Badge -->
+        <div class="reveal inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E5E7EB] shadow-sm mb-6">
+            <span class="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+            <span class="text-xs font-semibold text-[#475467] uppercase tracking-wide">Secure Digital Evidence Management</span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="reveal text-5xl md:text-7xl font-extrabold text-[#101828] leading-tight tracking-tight mb-6" style="transition-delay: 100ms;">
+            Report. Track. <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#10B981] to-emerald-700">Resolve.</span>
+        </h1>
+        
+        <p class="reveal text-lg md:text-xl text-[#475467] max-w-2xl mx-auto mb-10 leading-relaxed" style="transition-delay: 200ms;">
+            Proofly provides a structured platform for submitting complaints, securely managing digital evidence, tracking investigations, and maintaining transparent case records.
+        </p>
+
+        <!-- CTAs -->
+        <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4 mb-16" style="transition-delay: 300ms;">
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard:home' %}" class="w-full sm:w-auto bg-[#10B981] hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                    Go to Dashboard <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+            {% else %}
+                <a href="{% url 'accounts:register' %}" class="w-full sm:w-auto bg-[#10B981] hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                    Get Started <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+                <a href="#how-it-works" class="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#101828] border border-[#E5E7EB] px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-sm">
+                    Explore How It Works
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Trust Badges (Fake Logos Style) -->
+        <div class="reveal mb-16" style="transition-delay: 350ms;">
+            <p class="text-xs font-semibold text-[#475467] uppercase tracking-wider mb-6">Built for professionals</p>
+            <div class="flex flex-wrap justify-center gap-8 md:gap-12 opacity-50 grayscale">
+                <div class="flex items-center gap-2 font-bold text-xl"><i data-lucide="shield" class="w-6 h-6"></i> SecureCorp</div>
+                <div class="flex items-center gap-2 font-bold text-xl"><i data-lucide="scale" class="w-6 h-6"></i> LegalTech</div>
+                <div class="flex items-center gap-2 font-bold text-xl"><i data-lucide="building-2" class="w-6 h-6"></i> Enterprise</div>
+                <div class="flex items-center gap-2 font-bold text-xl"><i data-lucide="fingerprint" class="w-6 h-6"></i> Forensics</div>
+            </div>
+        </div>
+
+        <!-- Premium Floating Dashboard Mockup -->
+        <div class="reveal relative max-w-5xl mx-auto mt-10" style="transition-delay: 400ms;">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#F8FAFC] via-transparent to-transparent z-10 h-full w-full"></div>
+            <div class="bg-white rounded-3xl border border-[#E5E7EB] shadow-2xl p-2 md:p-4 relative overflow-hidden group">
+                <!-- Browser Chrome -->
+                <div class="bg-[#F8FAFC] border-b border-[#E5E7EB] px-4 py-3 rounded-t-2xl flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                    <div class="mx-auto bg-white border border-[#E5E7EB] rounded-md px-8 py-1 text-xs text-[#475467] font-medium flex items-center gap-2">
+                        <i data-lucide="lock" class="w-3 h-3"></i> app.proofly.com/dashboard
+                    </div>
+                </div>
+                
+                <!-- Dashboard UI Simulation -->
+                <div class="flex h-[300px] md:h-[400px] bg-white rounded-b-2xl overflow-hidden">
+                    <!-- Sidebar Simulation -->
+                    <div class="w-48 bg-[#101828] p-4 hidden md:flex flex-col gap-2">
+                        <div class="h-6 w-24 bg-white/20 rounded mb-4"></div>
+                        <div class="h-8 w-full bg-white/10 rounded-lg"></div>
+                        <div class="h-8 w-full bg-transparent rounded-lg"></div>
+                        <div class="h-8 w-full bg-transparent rounded-lg"></div>
+                    </div>
+                    <!-- Main Content Simulation -->
+                    <div class="flex-1 p-6 md:p-8 bg-[#F8FAFC]">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="h-6 w-32 bg-slate-200 rounded"></div>
+                            <div class="h-8 w-24 bg-[#10B981] rounded-lg"></div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="h-20 bg-white rounded-xl border border-[#E5E7EB] p-3 flex flex-col justify-between">
+                                <div class="h-2 w-12 bg-slate-200 rounded"></div>
+                                <div class="h-4 w-8 bg-[#101828] rounded"></div>
+                            </div>
+                            <div class="h-20 bg-white rounded-xl border border-[#E5E7EB] p-3 flex flex-col justify-between">
+                                <div class="h-2 w-12 bg-slate-200 rounded"></div>
+                                <div class="h-4 w-8 bg-amber-500 rounded"></div>
+                            </div>
+                            <div class="h-20 bg-white rounded-xl border border-[#E5E7EB] p-3 flex flex-col justify-between">
+                                <div class="h-2 w-12 bg-slate-200 rounded"></div>
+                                <div class="h-4 w-8 bg-[#10B981] rounded"></div>
+                            </div>
+                        </div>
+                        <div class="h-32 bg-white rounded-xl border border-[#E5E7EB] w-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Highlights Section -->
+<section class="py-12 bg-white border-y border-[#E5E7EB]">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div class="reveal flex flex-col items-center p-4 rounded-xl hover:bg-[#F8FAFC] transition-colors cursor-default">
+                <div class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mb-3">
+                    <i data-lucide="file-text" class="w-6 h-6 text-[#10B981]"></i>
+                </div>
+                <span class="text-sm font-bold text-[#101828] mb-1">Structured Complaints</span>
+                <span class="text-xs text-[#475467]">Organized case filing</span>
+            </div>
+            <div class="reveal flex flex-col items-center p-4 rounded-xl hover:bg-[#F8FAFC] transition-colors cursor-default" style="transition-delay: 100ms;">
+                <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-3">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <span class="text-sm font-bold text-[#101828] mb-1">Secure Evidence</span>
+                <span class="text-xs text-[#475467]">Protected file storage</span>
+            </div>
+            <div class="reveal flex flex-col items-center p-4 rounded-xl hover:bg-[#F8FAFC] transition-colors cursor-default" style="transition-delay: 200ms;">
+                <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mb-3">
+                    <i data-lucide="search" class="w-6 h-6 text-purple-600"></i>
+                </div>
+                <span class="text-sm font-bold text-[#101828] mb-1">Transparent Tracking</span>
+                <span class="text-xs text-[#475467]">Real-time case updates</span>
+            </div>
+            <div class="reveal flex flex-col items-center p-4 rounded-xl hover:bg-[#F8FAFC] transition-colors cursor-default" style="transition-delay: 300ms;">
+                <div class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center mb-3">
+                    <i data-lucide="users" class="w-6 h-6 text-amber-600"></i>
+                </div>
+                <span class="text-sm font-bold text-[#101828] mb-1">Role-Based Access</span>
+                <span class="text-xs text-[#475467]">Strict permissions</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-24 bg-[#F8FAFC]">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#101828] mb-6">A Better Way to Handle Digital Complaints</h2>
+                <p class="text-lg text-[#475467] mb-6 leading-relaxed">
+                    Traditional complaint management is often fragmented, insecure, and difficult to track. Proofly solves this by providing a centralized, enterprise-grade platform for handling sensitive cases.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-[#10B981] shrink-0"></i>
+                        <span class="text-[#475467]">Organized complaint submission with verified tracking IDs.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-[#10B981] shrink-0"></i>
+                        <span class="text-[#475467]">Structured investigation workflows with investigator assignment.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-[#10B981] shrink-0"></i>
+                        <span class="text-[#475467]">Controlled evidence access to ensure privacy and integrity.</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="reveal relative" style="transition-delay: 200ms;">
+                <!-- Abstract CSS Visual -->
+                <div class="aspect-square rounded-3xl bg-gradient-to-tr from-[#101828] to-slate-800 shadow-2xl overflow-hidden relative border border-slate-700 flex items-center justify-center p-8 group">
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiMzMzMiLz48L3N2Zz4=')] opacity-20"></div>
+                    <div class="relative z-10 text-center transform group-hover:scale-105 transition-transform duration-500">
+                        <i data-lucide="shield" class="w-32 h-32 text-[#10B981] mx-auto mb-6 opacity-80"></i>
+                        <div class="h-2 w-32 bg-slate-700 rounded-full mx-auto mb-3"></div>
+                        <div class="h-2 w-48 bg-slate-700 rounded-full mx-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="py-24 bg-white relative">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#101828] mb-4">From Report to Resolution</h2>
+            <p class="text-lg text-[#475467] max-w-2xl mx-auto">A streamlined, transparent workflow designed for accountability.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            <!-- Connecting Line (Desktop) -->
+            <div class="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-[#E5E7EB] -z-10"></div>
+
+            <!-- Step 1 -->
+            <div class="reveal text-center bg-white p-6 rounded-2xl relative group hover:-translate-y-2 transition-transform duration-300">
+                <div class="w-24 h-24 bg-[#F8FAFC] border-4 border-white shadow-sm rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 group-hover:border-[#10B981] transition-colors">
+                    <span class="text-3xl font-extrabold text-[#10B981]">01</span>
+                </div>
+                <h3 class="text-xl font-bold text-[#101828] mb-3">Submit a Complaint</h3>
+                <p class="text-[#475467] text-sm leading-relaxed">Users submit complaints with relevant details through a structured process, securely attaching digital evidence.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="reveal text-center bg-white p-6 rounded-2xl relative group hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 200ms;">
+                <div class="w-24 h-24 bg-[#F8FAFC] border-4 border-white shadow-sm rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 group-hover:border-[#10B981] transition-colors">
+                    <span class="text-3xl font-extrabold text-[#10B981]">02</span>
+                </div>
+                <h3 class="text-xl font-bold text-[#101828] mb-3">Investigation</h3>
+                <p class="text-[#475467] text-sm leading-relaxed">Authorized investigators review assigned complaints, update progress, and manage case records securely.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="reveal text-center bg-white p-6 rounded-2xl relative group hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 400ms;">
+                <div class="w-24 h-24 bg-[#F8FAFC] border-4 border-white shadow-sm rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 group-hover:border-[#10B981] transition-colors">
+                    <span class="text-3xl font-extrabold text-[#10B981]">03</span>
+                </div>
+                <h3 class="text-xl font-bold text-[#101828] mb-3">Resolution</h3>
+                <p class="text-[#475467] text-sm leading-relaxed">The complaint moves through its defined workflow toward an appropriate resolution, fully audited.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Features Section -->
+<section id="features" class="py-24 bg-[#F8FAFC]">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#101828] mb-4">Everything You Need to Manage Cases</h2>
+            <p class="text-lg text-[#475467] max-w-2xl mx-auto">Enterprise-grade features built for security and transparency.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Feature 1 -->
+            <div class="reveal relative group bg-white p-8 rounded-2xl border border-[#E5E7EB] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-emerald-50 text-[#10B981] rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#101828] mb-2">Digital Complaint Submission</h3>
+                    <p class="text-[#475467] text-sm leading-relaxed">Submit detailed complaints with unique tracking IDs and structured categories.</p>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="reveal relative group bg-white p-8 rounded-2xl border border-[#E5E7EB] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden" style="transition-delay: 100ms;">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#101828] mb-2">Secure Evidence Management</h3>
+                    <p class="text-[#475467] text-sm leading-relaxed">Upload images and PDFs safely. Files are validated and served only to authorized users.</p>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="reveal relative group bg-white p-8 rounded-2xl border border-[#E5E7EB] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden" style="transition-delay: 200ms;">
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="search" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#101828] mb-2">Complaint Tracking</h3>
+                    <p class="text-[#475467] text-sm leading-relaxed">Track the status of your case in real-time as it moves through the investigation workflow.</p>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="reveal relative group bg-white p-8 rounded-2xl border border-[#E5E7EB] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-amber-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#101828] mb-2">Investigator Assignment</h3>
+                    <p class="text-[#475467] text-sm leading-relaxed">Admins can securely assign investigators to specific cases based on workload.</p>
+                </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="reveal relative group bg-white p-8 rounded-2xl border border-[#E5E7EB] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden" style="transition-delay: 100ms;">
+                <div class="absolute inset-0 bg-gradient-to-r from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#101828] mb-2">Role-Based Dashboards</h3>
+                    <p class="text-[#475467] text-sm leading-relaxed">Dedicated interfaces for Complainants, Investigators, and Admins.</p>
+                </div>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="reveal relative group bg-white p-8 rounded-2xl border border-[#E5E7EB] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden" style="transition-delay: 200ms;">
+                <div class="absolute inset-0 bg-gradient-to-r from-rose-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="activity" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#101828] mb-2">Activity & Audit History</h3>
+                    <p class="text-[#475467] text-sm leading-relaxed">Every action, status change, and note is logged in an immutable timeline.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Team/Investigators Section -->
+{% if investigators %}
+<section id="team" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#101828] mb-4">Meet Our Investigators</h2>
+            <p class="text-lg text-[#475467] max-w-2xl mx-auto">Our team of dedicated professionals ensures every case is handled with expertise and care.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for investigator in investigators %}
+            <div class="reveal bg-[#F8FAFC] rounded-3xl border border-[#E5E7EB] p-6 text-center hover:shadow-lg transition-all duration-300 group">
+                <!-- Profile Picture -->
+                <div class="relative w-24 h-24 mx-auto mb-4">
+                    {% if investigator.profile.profile_picture %}
+                        <img src="{{ investigator.profile.profile_picture.url }}" alt="{{ investigator.get_full_name }}" class="w-full h-full rounded-full object-cover border-4 border-white shadow-sm group-hover:scale-105 transition-transform">
+                    {% else %}
+                        <div class="w-full h-full rounded-full bg-[#101828] text-white flex items-center justify-center text-3xl font-bold border-4 border-white shadow-sm group-hover:scale-105 transition-transform">
+                            {{ investigator.username|make_list|first }}
+                        </div>
+                    {% endif %}
+                    <!-- Verified Badge -->
+                    <div class="absolute bottom-0 right-0 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-[#10B981]"></i>
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-bold text-[#101828]">{{ investigator.get_full_name|default:investigator.username }}</h3>
+                <p class="text-sm font-semibold text-[#10B981] uppercase tracking-wide mt-1">
+                    {{ investigator.profile.get_specialization_display|default:"Investigator" }}
+                </p>
+                
+                <p class="text-sm text-[#475467] mt-3 line-clamp-3">
+                    {{ investigator.profile.bio|default:"Dedicated to bringing clarity and resolution to every case assigned." }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+
+<!-- Security Section -->
+<section class="py-24 bg-[#101828] text-white relative overflow-hidden">
+    <!-- Gradient Blob -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-[#10B981] rounded-full blur-[120px] opacity-20 -z-10"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-500 rounded-full blur-[120px] opacity-10 -z-10"></div>
+    
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Designed with Access Control and Accountability</h2>
+                <p class="text-slate-400 mb-8 leading-relaxed text-lg">Your data is protected at every layer. Proofly ensures that sensitive case information is only accessible to authorized personnel.</p>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                        <div class="w-12 h-12 rounded-xl bg-[#10B981]/20 flex items-center justify-center shrink-0 border border-[#10B981]/30">
+                            <i data-lucide="lock" class="w-6 h-6 text-[#10B981]"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-lg">Role-Based Permissions</h3>
+                            <p class="text-sm text-slate-400 mt-1 leading-relaxed">Strict backend validation ensures users only access what they are authorized to see.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                        <div class="w-12 h-12 rounded-xl bg-[#10B981]/20 flex items-center justify-center shrink-0 border border-[#10B981]/30">
+                            <i data-lucide="shield" class="w-6 h-6 text-[#10B981]"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-lg">Restricted Evidence Access</h3>
+                            <p class="text-sm text-slate-400 mt-1 leading-relaxed">Evidence files are served through secure endpoints, preventing unauthorized URL guessing.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                        <div class="w-12 h-12 rounded-xl bg-[#10B981]/20 flex items-center justify-center shrink-0 border border-[#10B981]/30">
+                            <i data-lucide="clock" class="w-6 h-6 text-[#10B981]"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-lg">Immutable Audit History</h3>
+                            <p class="text-sm text-slate-400 mt-1 leading-relaxed">System logs cannot be edited or deleted, ensuring complete transparency.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal relative" style="transition-delay: 200ms;">
+                <div class="aspect-square md:aspect-video bg-slate-800/50 backdrop-blur-sm rounded-3xl border border-slate-700 p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                    <!-- UI Decoration -->
+                    <div class="flex gap-2 mb-4">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                    </div>
+                    
+                    <!-- Fake Logs -->
+                    <div class="space-y-4 opacity-80 font-mono text-xs md:text-sm">
+                        <div class="flex items-center gap-3 text-emerald-400 bg-emerald-400/10 p-2 rounded-lg border border-emerald-400/20">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i> [SYSTEM] Auth verified: ADMIN
+                        </div>
+                        <div class="flex items-center gap-3 text-slate-400 p-2">
+                            <i data-lucide="clock" class="w-4 h-4"></i> [LOG] Status updated: UNDER_REVIEW
+                        </div>
+                        <div class="flex items-center gap-3 text-slate-400 p-2">
+                            <i data-lucide="file-text" class="w-4 h-4"></i> [FILE] Evidence uploaded: secure_hash.pdf
+                        </div>
+                        <div class="flex items-center gap-3 text-blue-400 bg-blue-400/10 p-2 rounded-lg border border-blue-400/20">
+                            <i data-lucide="shield" class="w-4 h-4"></i> [SEC] Investigator assigned
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 border-t border-slate-700 pt-4 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="shield-check" class="w-8 h-8 text-[#10B981]"></i>
+                            <div>
+                                <div class="h-2 w-24 bg-slate-600 rounded mb-2"></div>
+                                <div class="h-2 w-16 bg-slate-700 rounded"></div>
+                            </div>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500">System Secure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="py-24 bg-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-[#F8FAFC] -z-10"></div>
+    <div class="max-w-4xl mx-auto px-6 text-center reveal">
+        <h2 class="text-3xl md:text-5xl font-bold text-[#101828] mb-6">Ready to Bring Structure to Complaint Management?</h2>
+        <p class="text-lg text-[#475467] mb-10 max-w-2xl mx-auto">Start using a more organized approach to complaint submission, investigation, and case tracking.</p>
+        
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a href="{% url 'accounts:register' %}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-emerald-600 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                Get Started with Proofly <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'accounts:login' %}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white border border-[#E5E7EB] hover:bg-slate-50 text-[#101828] px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-sm">
+                    Sign In
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

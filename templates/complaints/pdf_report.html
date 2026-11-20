@@ -1,0 +1,186 @@
+<!-- templates/complaints/pdf_report.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Proofly Case Report - {{ complaint.tracking_id }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            font-size: 12pt;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #10B981;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #101828;
+            margin-bottom: 5px;
+        }
+        .logo span {
+            color: #10B981;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 10pt;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section-title {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #101828;
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .grid td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+        .grid td.label {
+            font-weight: bold;
+            width: 30%;
+            color: #555;
+        }
+        .grid td.value {
+            width: 70%;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: #F8FAFC;
+            border: 1px solid #E5E7EB;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 10pt;
+            color: #10B981;
+        }
+        .description-box {
+            background-color: #F8FAFC;
+            border: 1px solid #E5E7EB;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .timeline {
+            margin-top: 15px;
+        }
+        .timeline-item {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 3px solid #10B981;
+        }
+        .timeline-date {
+            font-size: 9pt;
+            color: #888;
+        }
+        .timeline-action {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+        .timeline-actor {
+            font-size: 10pt;
+            color: #555;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 9pt;
+            color: #888;
+            border-top: 1px solid #E5E7EB;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo"><span>■</span> Proofly</div>
+        <div class="subtitle">Official Case Summary Report</div>
+    </div>
+
+    <!-- Case Overview -->
+    <div class="section-title">Case Overview</div>
+    <table class="grid">
+        <tr>
+            <td class="label">Tracking ID:</td>
+            <td class="value"><span class="badge">{{ complaint.tracking_id }}</span></td>
+        </tr>
+        <tr>
+            <td class="label">Title:</td>
+            <td class="value"><strong>{{ complaint.title }}</strong></td>
+        </tr>
+        <tr>
+            <td class="label">Status:</td>
+            <td class="value">{{ complaint.get_status_display }}</td>
+        </tr>
+        <tr>
+            <td class="label">Category:</td>
+            <td class="value">{{ complaint.get_category_display }}</td>
+        </tr>
+        <tr>
+            <td class="label">Priority:</td>
+            <td class="value">{{ complaint.get_priority_display }}</td>
+        </tr>
+        <tr>
+            <td class="label">Date Submitted:</td>
+            <td class="value">{{ complaint.created_at|date:"F j, Y, g:i a" }}</td>
+        </tr>
+        <tr>
+            <td class="label">Complainant:</td>
+            <td class="value">{{ complaint.complainant.get_full_name|default:complaint.complainant.username }}</td>
+        </tr>
+        {% if complaint.assigned_investigator %}
+        <tr>
+            <td class="label">Assigned Investigator:</td>
+            <td class="value">{{ complaint.assigned_investigator.get_full_name|default:complaint.assigned_investigator.username }}</td>
+        </tr>
+        {% endif %}
+    </table>
+
+    <!-- Complaint Description -->
+    <div class="section-title">Detailed Description</div>
+    <div class="description-box">
+        {{ complaint.description|linebreaks }}
+    </div>
+
+    <!-- Activity Timeline -->
+    <div class="section-title">Activity Timeline</div>
+    <div class="timeline">
+        {% for log in logs %}
+        <div class="timeline-item">
+            <div class="timeline-date">{{ log.created_at|date:"F j, Y, g:i a" }}</div>
+            <div class="timeline-action">{{ log.get_action_type_display }}</div>
+            <div class="timeline-actor">by {{ log.actor_display_name }} (@{{ log.actor_username }})</div>
+            {% if log.note %}
+                <div style="font-size: 10pt; margin-top: 5px; color: #555;">"{{ log.note }}"</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Generated by Proofly on {% now "F j, Y" %} | Confidential Case Document
+    </div>
+</body>
+</html>

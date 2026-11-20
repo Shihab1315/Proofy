@@ -1,0 +1,106 @@
+<!-- templates/public/base_public.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta -->
+    <title>{% block title %}Proofly | Report. Track. Resolve.{% endblock %}</title>
+    <meta name="description" content="Proofly is a premium enterprise platform for secure digital evidence management, complaint tracking, and transparent investigations.">
+    <meta name="keywords" content="complaint management, digital evidence, SaaS, investigations, Proofly">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Proofly | Report. Track. Resolve.">
+    <meta property="og:description" content="A premium enterprise platform designed to securely manage digital evidence, track complaints, and ensure transparent investigations.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{% static 'images/og-image.jpg' %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310B981%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 font-family=%22Arial%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>P</text></svg>">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Global Base Styles */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #F8FAFC; 
+            color: #101828; 
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Custom Premium Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F8FAFC; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+        /* Text Selection Color */
+        ::selection { background-color: #10B981; color: white; }
+        
+        /* Scroll Reveal Animations */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        /* Page Loader Bar */
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px; background: #10B981;
+            width: 0%; z-index: 9999; transition: width 0.3s ease;
+        }
+
+        /* Respect Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased relative">
+
+    <!-- Page Loader -->
+    <div id="progress-bar"></div>
+
+    <!-- Navbar Include -->
+    {% include 'public/includes/navbar.html' %}
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Include -->
+    {% include 'public/includes/footer.html' %}
+
+    <!-- Scripts -->
+    <script src="{% static 'js/public.js' %}"></script>
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Page Load Progress Bar
+        const progressBar = document.getElementById('progress-bar');
+        if (progressBar) {
+            window.addEventListener('load', () => {
+                progressBar.style.width = '100%';
+                setTimeout(() => { progressBar.style.opacity = '0'; }, 500);
+            });
+            // Simulate loading start
+            progressBar.style.width = '30%';
+            setTimeout(() => { progressBar.style.width = '70%'; }, 200);
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

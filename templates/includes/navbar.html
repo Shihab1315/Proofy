@@ -1,0 +1,17 @@
+<nav class="bg-white border-b border-[#E5E7EB] px-6 py-4 flex justify-between items-center shadow-sm">
+    <a href="/" class="text-xl font-bold text-[#101828] flex items-center gap-2">
+        <span class="text-[#10B981]">■</span> Proofly
+    </a>
+    <div class="flex items-center gap-4">
+        {% if user.is_authenticated %}
+            <a href="{% url 'accounts:profile' %}" class="text-sm font-medium text-[#475467] hover:text-[#10B981] transition-colors">Profile</a>
+            <form action="{% url 'accounts:logout' %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="text-sm font-medium text-[#475467] hover:text-red-500 transition-colors">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-[#475467] hover:text-[#10B981] transition-colors">Login</a>
+            <a href="{% url 'accounts:register' %}" class="bg-[#10B981] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors shadow-sm">Register</a>
+        {% endif %}
+    </div>
+</nav>

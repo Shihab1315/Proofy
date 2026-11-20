@@ -1,0 +1,68 @@
+<!-- templates/dashboard/includes/sidebar.html -->
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#101828] text-white flex flex-col transition-all duration-300 transform -translate-x-full md:translate-x-0 md:relative md:w-64">
+    
+    <!-- Logo -->
+    <div class="h-16 flex items-center px-6 border-b border-white/10 shrink-0">
+        <a href="{% url 'home' %}" class="flex items-center gap-2 text-xl font-bold tracking-tight">
+            <span class="text-[#10B981]">■</span> Proofly
+        </a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2 custom-scrollbar">
+        <!-- Common Link -->
+        <a href="{% url 'dashboard:home' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-slate-300 hover:text-white group">
+            <i data-lucide="layout-dashboard" class="w-5 h-5 group-hover:text-[#10B981] transition-colors"></i>
+            <span class="font-medium text-sm">Overview</span>
+        </a>
+
+        <!-- Complainant Links -->
+        {% if user.role == 'COMPLAINANT' %}
+        <a href="{% url 'dashboard:complainant' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white border-l-4 border-[#10B981] transition-all">
+            <i data-lucide="file-text" class="w-5 h-5 text-[#10B981]"></i>
+            <span class="font-medium text-sm">My Complaints</span>
+        </a>
+        {% endif %}
+
+        <!-- Investigator Links -->
+        {% if user.role == 'INVESTIGATOR' %}
+        <a href="{% url 'dashboard:investigator' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white border-l-4 border-[#10B981] transition-all">
+            <i data-lucide="briefcase" class="w-5 h-5 text-[#10B981]"></i>
+            <span class="font-medium text-sm">Assigned Cases</span>
+        </a>
+        {% endif %}
+
+                <!-- Admin Links -->
+        {% if user.role == 'ADMIN' %}
+        <a href="{% url 'dashboard:admin' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white border-l-4 border-[#10B981] transition-all">
+            <i data-lucide="shield" class="w-5 h-5 text-[#10B981]"></i>
+            <span class="font-medium text-sm">Admin Hub</span>
+        </a>
+        
+        <!-- NEW: Investigator Management Link -->
+        <a href="{% url 'accounts:investigator_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-slate-300 hover:text-white group">
+            <i data-lucide="users" class="w-5 h-5 group-hover:text-[#10B981] transition-colors"></i>
+            <span class="font-medium text-sm">Investigators</span>
+        </a>
+
+        <a href="/admin/" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-slate-300 hover:text-white group">
+            <i data-lucide="settings" class="w-5 h-5 group-hover:text-[#10B981] transition-colors"></i>
+            <span class="font-medium text-sm">Django Admin</span>
+        </a>
+        {% endif %}
+    </nav>
+
+    <!-- Bottom Profile Section -->
+    <div class="p-4 border-t border-white/10 shrink-0">
+        <a href="{% url 'accounts:profile' %}" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+            <div class="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-bold uppercase shrink-0">
+                {{ user.username|make_list|first }}
+            </div>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-white truncate">{{ user.get_full_name|default:user.username }}</p>
+                <p class="text-xs text-slate-400 truncate">{{ user.role|title }}</p>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-white transition-colors"></i>
+        </a>
+    </div>
+</aside>

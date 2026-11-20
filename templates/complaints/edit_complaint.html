@@ -1,0 +1,45 @@
+<!-- templates/complaints/edit_complaint.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+{% block title %}Edit Complaint{% endblock %}
+{% block breadcrumb %}Edit Complaint{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto fade-in">
+    <div class="mb-8">
+        <a href="{% url 'complaints:detail' complaint.id %}" class="text-sm font-medium text-[#475467] hover:text-[#10B981] flex items-center gap-1 mb-4">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Details
+        </a>
+        <h1 class="text-2xl font-bold text-[#101828]">Edit Complaint</h1>
+        <p class="text-[#475467] text-sm mt-1">Update the details of your complaint ({{ complaint.tracking_id }}).</p>
+    </div>
+
+    <form method="post" class="bg-white p-6 md:p-8 rounded-2xl border border-[#E5E7EB] shadow-sm space-y-5">
+        {% csrf_token %}
+        
+        <div>
+            <label class="block text-sm font-semibold text-[#101828] mb-2">Complaint Title</label>
+            {{ form.title }}
+            {% if form.title.errors %}<p class="text-red-500 text-xs mt-1">{{ form.title.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-[#101828] mb-2">Category</label>
+            {{ form.category }}
+            {% if form.category.errors %}<p class="text-red-500 text-xs mt-1">{{ form.category.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-[#101828] mb-2">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}<p class="text-red-500 text-xs mt-1">{{ form.description.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="flex justify-end gap-4 pt-4 border-t border-[#E5E7EB]">
+            <a href="{% url 'complaints:detail' complaint.id %}" class="px-6 py-3 rounded-xl border border-[#E5E7EB] text-[#475467] font-semibold text-sm hover:bg-slate-50 transition-colors">Cancel</a>
+            <button type="submit" class="bg-[#10B981] hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-semibold text-sm transition-all shadow-md hover:shadow-lg">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

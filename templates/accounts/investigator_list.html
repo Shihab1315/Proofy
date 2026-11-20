@@ -1,0 +1,105 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block title %}Investigators{% endblock %}
+{% block breadcrumb %}Investigators{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6 fade-in">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl border border-[#E5E7EB] shadow-sm">
+        <div>
+            <h1 class="text-2xl font-bold text-[#101828]">Investigator Management</h1>
+            <p class="text-[#475467] text-sm mt-1">Manage investigation team and their workloads.</p>
+        </div>
+        <a href="{% url 'accounts:investigator_create' %}" class="bg-[#10B981] hover:bg-emerald-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all shadow-sm flex items-center gap-2">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> Add Investigator
+        </a>
+    </div>
+
+    <!-- Search & List -->
+    <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-[#E5E7EB] bg-[#F8FAFC]">
+            <form method="get" class="relative max-w-md">
+                <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-[#475467]"></i>
+                <input type="text" name="q" value="{{ query }}" placeholder="Search by name, username or email..." class="w-full pl-9 pr-4 py-2 rounded-lg border border-[#E5E7EB] focus:ring-2 focus:ring-[#10B981] outline-none text-sm">
+            </form>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-xs font-semibold text-[#475467] uppercase tracking-wider border-b border-[#E5E7EB] bg-white">
+                        <th class="px-6 py-4">Investigator</th>
+                        <th class="px-6 py-4">Specialization</th>
+                        <th class="px-6 py-4 text-center">Active Cases</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#E5E7EB]">
+                    {% for inv in page_obj %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                {% if inv.profile.profile_picture %}
+                                    <img src="{{ inv.profile.profile_picture.url }}" class="w-10 h-10 rounded-full object-cover">
+                                {% else %}
+                                    <div class="w-10 h-10 rounded-full bg-[#101828] text-white flex items-center justify-center font-bold uppercase">{{ inv.username|make_list|first }}</div>
+                                {% endif %}
+                                <div>
+                                    <p class="text-sm font-semibold text-[#101828]">{{ inv.get_full_name|default:inv.username }}</p>
+                                    <p class="text-xs text-[#475467]">{{ inv.email }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-[#475467]">{{ inv.profile.get_specialization_display|default:"-" }}</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-blue-700 font-bold text-sm">{{ inv.active_cases }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if inv.is_active %}
+                                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-xs font-semibold">Active</span>
+                            {% else %}
+                                <span class="px-2.5 py-1 bg-red-50 text-red-700 border border-red-200 rounded text-xs font-semibold">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-right flex justify-end gap-2">
+                            <a href="{% url 'accounts:investigator_detail' inv.id %}" class="p-2 text-[#475467] hover:text-[#10B981] hover:bg-emerald-50 rounded-lg transition-colors" title="View"><i data-lucide="eye" class="w-4 h-4"></i></a>
+                            <a href="{% url 'accounts:investigator_edit' inv.id %}" class="p-2 text-[#475467] hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><i data-lucide="edit-3" class="w-4 h-4"></i></a>
+                            
+                            <form action="{% url 'accounts:investigator_toggle_status' inv.id %}" method="post" class="inline" onsubmit="return confirm('Are you sure you want to change the account status?');">
+                                {% csrf_token %}
+                                <button type="submit" class="p-2 {% if inv.is_active %}text-red-500 hover:bg-red-50{% else %}text-emerald-500 hover:bg-emerald-50{% endif %} rounded-lg transition-colors" title="Toggle Status">
+                                    <i data-lucide="{% if inv.is_active %}user-x{% else %}user-check{% endif %}" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center">
+                            <p class="text-[#475467]">No investigators found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="px-6 py-4 border-t border-[#E5E7EB] flex justify-between items-center bg-[#F8FAFC]">
+            <span class="text-xs text-[#475467]">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            <div class="flex gap-1">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-1 border border-[#E5E7EB] rounded text-sm hover:bg-white transition-colors">Prev</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-1 border border-[#E5E7EB] rounded text-sm hover:bg-white transition-colors">Next</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-[#E5E7EB] p-8 fade-in">
+    <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-[#101828]">Create an Account</h1>
+        <p class="text-[#475467] text-sm mt-2">Join Proofly to submit and track complaints securely.</p>
+    </div>
+
+    <form method="post" class="space-y-4" id="registerForm">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#101828] mb-1">First Name</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.first_name.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#101828] mb-1">Last Name</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.last_name.errors.0 }}</p>{% endif %}
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-[#101828] mb-1">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}<p class="text-red-500 text-xs mt-1">{{ form.username.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-[#101828] mb-1">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}<p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-[#101828] mb-1">Password</label>
+            <div class="relative">
+                {{ form.password1 }}
+                <button type="button" class="absolute right-3 top-3 text-[#475467] hover:text-[#101828]" onclick="togglePassword('id_password1', this)">
+                    <i data-lucide="eye" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="h-1 w-full bg-gray-200 rounded mt-2 overflow-hidden">
+                <div id="strength-bar" class="h-full w-0 transition-all duration-300"></div>
+            </div>
+            {% if form.password1.errors %}<p class="text-red-500 text-xs mt-1">{{ form.password1.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-[#101828] mb-1">Confirm Password</label>
+            <div class="relative">
+                {{ form.password2 }}
+                <button type="button" class="absolute right-3 top-3 text-[#475467] hover:text-[#101828]" onclick="togglePassword('id_password2', this)">
+                    <i data-lucide="eye" class="w-5 h-5"></i>
+                </button>
+            </div>
+            {% if form.password2.errors %}<p class="text-red-500 text-xs mt-1">{{ form.password2.errors.0 }}</p>{% endif %}
+        </div>
+
+        <button type="submit" class="w-full bg-[#10B981] text-white py-3 rounded-lg font-semibold hover:bg-emerald-600 transition-all shadow-md hover:shadow-lg mt-4">
+            Create Account
+        </button>
+    </form>
+
+    <p class="text-center text-sm text-[#475467] mt-6">
+        Already have an account? <a href="{% url 'accounts:login' %}" class="text-[#10B981] font-medium hover:underline">Log in</a>
+    </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = '<i data-lucide="eye-off" class="w-5 h-5"></i>';
+        } else {
+            input.type = 'password';
+            btn.innerHTML = '<i data-lucide="eye" class="w-5 h-5"></i>';
+        }
+        lucide.createIcons();
+    }
+
+    // Password Strength Meter
+    document.getElementById('id_password1').addEventListener('input', function(e) {
+        const val = e.target.value;
+        const bar = document.getElementById('strength-bar');
+        let strength = 0;
+        if (val.length > 5) strength += 25;
+        if (val.length > 8) strength += 25;
+        if (/[A-Z]/.test(val)) strength += 25;
+        if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) strength += 25;
+        
+        bar.style.width = strength + '%';
+        if (strength <= 25) bar.style.backgroundColor = '#ef4444'; // Red
+        else if (strength <= 50) bar.style.backgroundColor = '#f59e0b'; // Yellow
+        else if (strength <= 75) bar.style.backgroundColor = '#10b981'; // Emerald
+        else bar.style.backgroundColor = '#047857'; // Dark Emerald
+    });
+</script>
+{% endblock %}

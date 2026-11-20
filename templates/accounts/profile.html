@@ -1,0 +1,194 @@
+<!-- templates/accounts/profile.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+{% block title %}My Profile{% endblock %}
+{% block breadcrumb %}My Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto fade-in pb-10">
+    
+    <!-- Profile Header Card -->
+    <div class="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm overflow-hidden mb-6 relative">
+        
+        <!-- Premium Cover Banner -->
+        <div class="h-48 md:h-56 bg-[#101828] relative overflow-hidden">
+            <!-- Decorative Gradients -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-[#10B981] rounded-full blur-[100px] opacity-30 -translate-y-1/2 translate-x-1/3"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500 rounded-full blur-[80px] opacity-20 translate-y-1/2 -translate-x-1/3"></div>
+            <!-- Abstract Pattern -->
+            <div class="absolute inset-0 opacity-[0.05]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;"></div>
+        </div>
+
+        <!-- Profile Info Container -->
+        <div class="px-6 md:px-10 pb-8 relative">
+            
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end -mt-16 md:-mt-20 gap-6">
+                
+                <!-- Avatar with Ring -->
+                <div class="relative group">
+                    {% if user.profile.profile_picture %}
+                        <img src="{{ user.profile.profile_picture.url }}" alt="Profile" class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-[6px] border-white shadow-xl bg-white">
+                    {% else %}
+                        <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-[#10B981] to-emerald-700 text-white flex items-center justify-center text-5xl md:text-6xl font-bold uppercase border-[6px] border-white shadow-xl">
+                            {{ user.username|make_list|first }}
+                        </div>
+                    {% endif %}
+                    <!-- Verified Badge -->
+                    <div class="absolute bottom-2 right-4 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E5E7EB]">
+                        <i data-lucide="check-circle" class="w-5 h-5 text-[#10B981]"></i>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <a href="{% url 'accounts:edit_profile' %}" class="flex-1 md:flex-none justify-center bg-[#101828] text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-slate-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                        <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Profile
+                    </a>
+                    <a href="{% url 'accounts:force_password_change' %}" class="flex-1 md:flex-none justify-center bg-white border border-[#E5E7EB] text-[#475467] px-6 py-3 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:text-[#101828] transition-all flex items-center gap-2">
+                        <i data-lucide="lock" class="w-4 h-4"></i> Security
+                    </a>
+                </div>
+            </div>
+
+            <!-- Name & Details -->
+            <div class="mt-6 md:mt-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-[#101828]">{{ user.get_full_name|default:user.username }}</h1>
+                        <div class="flex items-center gap-3 mt-2">
+                            <p class="text-[#475467] font-medium text-lg">@{{ user.username }}</p>
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#E5E7EB]"></span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold bg-emerald-50 text-[#10B981] uppercase tracking-wider border border-emerald-200">
+                                <i data-lucide="shield" class="w-3 h-3"></i> {{ user.get_role_display }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Completion (Mockup) -->
+                    <div class="bg-[#F8FAFC] p-4 rounded-2xl border border-[#E5E7EB] min-w-[200px]">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-semibold text-[#475467]">Profile Completion</span>
+                            <span class="text-xs font-bold text-[#10B981]">85%</span>
+                        </div>
+                        <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#10B981] rounded-full" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Side: Information -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- About Card -->
+            <div class="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-6 md:p-8">
+                <h2 class="text-lg font-bold text-[#101828] mb-6 flex items-center gap-2">
+                    <i data-lucide="user" class="w-5 h-5 text-[#10B981]"></i> Personal Information
+                </h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <div class="group">
+                        <p class="text-xs font-semibold text-[#475467] uppercase tracking-wider mb-1">Email Address</p>
+                        <p class="text-[#101828] font-medium flex items-center gap-2">
+                            {{ user.email }}
+                            <i data-lucide="mail-check" class="w-4 h-4 text-[#10B981] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </p>
+                    </div>
+                    <div class="group">
+                        <p class="text-xs font-semibold text-[#475467] uppercase tracking-wider mb-1">Phone Number</p>
+                        <p class="text-[#101828] font-medium">{{ user.profile.phone_number|default:"Not provided" }}</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-[#E5E7EB]">
+                    <p class="text-xs font-semibold text-[#475467] uppercase tracking-wider mb-3">Bio</p>
+                    {% if user.profile.bio %}
+                        <p class="text-[#101828] leading-relaxed">{{ user.profile.bio }}</p>
+                    {% else %}
+                        <p class="text-[#475467] italic bg-[#F8FAFC] p-4 rounded-xl border border-dashed border-[#E5E7EB] text-center text-sm">
+                            No bio added yet. Click 'Edit Profile' to tell us about yourself.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Quick Stats (For Complainants) -->
+            {% if user.role == 'COMPLAINANT' %}
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-6 flex items-center gap-4 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-[#475467]">My Complaints</p>
+                        <p class="text-2xl font-bold text-[#101828]">{{ user.filed_complaints.count }}</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-6 flex items-center gap-4 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-[#10B981] flex items-center justify-center">
+                        <i data-lucide="check-circle" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-[#475467]">Resolved</p>
+                        <p class="text-2xl font-bold text-[#101828]">{{ user.filed_complaints.all.count }}</p> <!-- Simplified for demo -->
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Side: Meta & Security -->
+        <div class="lg:col-span-1 space-y-6">
+            
+            <!-- Account Meta -->
+            <div class="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-6">
+                <h2 class="text-sm font-bold text-[#101828] uppercase tracking-wider mb-6">Account Details</h2>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] flex items-center justify-center text-[#475467] shrink-0">
+                            <i data-lucide="calendar" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-[#475467] mb-0.5">Member Since</p>
+                            <p class="text-sm font-semibold text-[#101828]">{{ user.date_joined|date:"F j, Y" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] flex items-center justify-center text-[#475467] shrink-0">
+                            <i data-lucide="clock" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-[#475467] mb-0.5">Last Login</p>
+                            <p class="text-sm font-semibold text-[#101828]">{{ user.last_login|date:"M d, Y"|default:"Today" }}</p>
+                            <p class="text-xs text-[#98A2B3]">{{ user.last_login|date:"g:i a" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Highlight -->
+            <div class="bg-gradient-to-br from-[#101828] to-slate-900 rounded-3xl shadow-lg p-6 text-white relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-[#10B981] rounded-full blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                <div class="relative z-10">
+                    <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-4">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-[#10B981]"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Secure Account</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                        Your account is protected by Proofly's role-based security. Keep your password strong and up to date.
+                    </p>
+                    <a href="{% url 'accounts:force_password_change' %}" class="inline-flex items-center justify-center w-full bg-white/10 hover:bg-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border border-white/10">
+                        Update Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

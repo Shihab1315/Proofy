@@ -1,0 +1,50 @@
+<!-- templates/dashboard/includes/topbar.html -->
+<header class="h-16 bg-white border-b border-[#E5E7EB] flex items-center justify-between px-4 md:px-8 shrink-0 sticky top-0 z-30">
+    
+    <!-- Left Side: Mobile Toggle & Breadcrumbs -->
+    <div class="flex items-center gap-4">
+        <button onclick="toggleSidebar()" class="md:hidden p-2 text-[#475467] hover:bg-slate-100 rounded-lg transition-colors focus:outline-none">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        
+        <div class="hidden md:flex items-center text-sm font-medium text-[#475467]">
+            <span class="hover:text-[#10B981] transition-colors cursor-pointer">Dashboard</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 mx-2 text-slate-400"></i>
+            <span class="text-[#101828] font-semibold">{% block breadcrumb %}Overview{% endblock %}</span>
+        </div>
+    </div>
+
+    <!-- Right Side: Actions & User Dropdown -->
+    <div class="flex items-center gap-3">
+        <button class="p-2 text-[#475467] hover:bg-slate-100 rounded-full transition-colors relative">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span class="absolute top-2 right-2 w-2 h-2 bg-[#F04438] rounded-full border-2 border-white"></span>
+        </button>
+        
+        <div class="h-6 w-px bg-[#E5E7EB] mx-1"></div>
+
+        <!-- User Dropdown -->
+        <div class="relative group">
+            <button class="flex items-center gap-2 focus:outline-none">
+                <div class="w-8 h-8 rounded-full bg-[#101828] text-white flex items-center justify-center text-sm font-bold uppercase">
+                    {{ user.username|make_list|first }}
+                </div>
+            </button>
+            
+            <!-- Dropdown Menu (Hover based for simplicity) -->
+            <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-[#E5E7EB] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
+                <div class="p-2 space-y-1">
+                    <a href="{% url 'accounts:profile' %}" class="flex items-center gap-2 px-3 py-2 text-sm text-[#475467] hover:bg-slate-50 hover:text-[#101828] rounded-lg transition-colors">
+                        <i data-lucide="user" class="w-4 h-4"></i> Profile
+                    </a>
+                    <form action="{% url 'accounts:logout' %}" method="post" class="w-full">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#F04438] hover:bg-red-50 rounded-lg transition-colors text-left">
+                            <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
